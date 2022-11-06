@@ -16,14 +16,14 @@ public class PersonController {
 
     @GetMapping("/person")
     public String findAll(Model model) {
-        List<Person> persons = personService.findAll();
+        List<Person> persons = personService.findAll().get();
         model.addAttribute("persons", persons);
         return "person";
     }
 
     @GetMapping(path = "/person/{id}")
-    public String findById(@PathVariable Long id, Model model) throws Exception {
-        Person person = personService.findById(id);
+    public String findById(@PathVariable Long id, Model model) {
+        Person person = personService.findById(id).get();
         model.addAttribute("persons", List.of(person));
         return "person";
     }

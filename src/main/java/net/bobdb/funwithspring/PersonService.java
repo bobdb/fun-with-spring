@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -16,15 +18,33 @@ public class PersonService {
         return personRepository.save(new Person(name));
     }
 
-    public Person findById(Long id) throws Exception {
-        return personRepository.findById(id)
-                .orElseThrow(Exception::new);
+    public Optional<Person> findById(Long id) {
+        return personRepository.findById(id);
+    }
+    public Optional<Person> findByName(String name) {
+        return Optional.of(personRepository.findByName(name));
     }
 
-    public List<Person> findAll() {
+    public Optional<List<Person>> findAll() {
         Iterable<Person> list = personRepository.findAll();
         List<Person> persons = new ArrayList<>();
         list.forEach(persons::add);
-        return persons;
+        return Optional.of(persons);
     }
+
+    public Long delete(Long id) {
+        personRepository.deleteById(id);
+        return id;
+    }
+
+    public Person update(Person person) throws Exception {
+        Person p = personRepository.findById(person.getId()).orElseThrow(Exception::new);
+
+        if (Objects.nonNull(person.getName())) {
+            p.setName(person.getName());
+        }
+
+        return personRepository.save(p);
+    }
+
 }

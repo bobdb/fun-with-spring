@@ -16,24 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersonApiTest {
 
     public static final long TEST_ID = 1L;
+    public static final String TEST_NAME_NEW = "Rhaenerys";
+    public static final String TEST_NAME_EXISTS = "Daemon";
 
     @LocalServerPort
     int TEST_PORT;
-
-    @Test
-    void findById() throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-
-        final String baseUrl = "http://localhost:" + TEST_PORT + "/api/person/" + TEST_ID;
-        URI uri = new URI(baseUrl);
-
-        ResponseEntity<Person> result = restTemplate.getForEntity(uri, Person.class);
-
-        assertEquals(200, result.getStatusCodeValue());
-        assertNotNull(result.getBody());
-        assertEquals("Daemon", result.getBody().getName());
-
-    }
 
     @Test
     void findAll() throws Exception {
@@ -48,7 +35,87 @@ class PersonApiTest {
         assertEquals(200, result.getStatusCodeValue());
 
         List<String> names = persons.stream().map(Person::getName).toList();
-        assertTrue(names.containsAll(List.of("Daemon", "Viserys", "Corlys")));
+        assertTrue(names.containsAll(List.of("Viserys", "Corlys")));
+
+    }
+
+    @Test
+    void findById() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String baseUrl = "http://localhost:" + TEST_PORT + "/api/person/" + 3;
+        URI uri = new URI(baseUrl);
+
+        ResponseEntity<Person> result = restTemplate.getForEntity(uri, Person.class);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertNotNull(result.getBody());
+        assertEquals("Corlys", result.getBody().getName());
+
+    }
+
+    @Test
+    void findByName() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String url = "http://localhost:" + TEST_PORT + "/api/search/Corlys";
+
+        ResponseEntity<Person> result = restTemplate.getForEntity(url, Person.class);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertNotNull(result.getBody());
+        assertEquals("Corlys", result.getBody().getName());
+
+    }
+
+    @Test
+    void create() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String baseUrl = "http://localhost:" + TEST_PORT + "/api/person/" + TEST_NAME_NEW;
+        Person person = new Person(TEST_NAME_NEW);
+        ResponseEntity<Person> result = restTemplate.postForEntity(baseUrl, person, Person.class);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertNotNull(result.getBody());
+        assertEquals(result.getBody().getName(), person.getName());
+
+    }
+
+    @Test
+    void update() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String baseUrl = "http://localhost:" + TEST_PORT + "/api/person/" + TEST_NAME_NEW;
+        Person person = new Person(TEST_NAME_NEW);
+        ResponseEntity<Person> result = restTemplate.postForEntity(baseUrl, person, Person.class);
+
+        Long id = result.getBody().getId();
+
+        final String url = "http://localhost:" + TEST_PORT + "/api/person/" + id;
+
+        result = restTemplate.getForEntity(url, Person.class);
+        result.getBody().setName(TEST_NAME_NEW);
+        restTemplate.put(url, result.getBody());
+
+        result = restTemplate.getForEntity(url, Person.class);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertNotNull(result.getBody());
+        assertEquals(result.getBody().getName(), person.getName());
+
+    }
+
+    @Test
+    void delete() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String url = "http://localhost:" + TEST_PORT + "/api/person/1";
+        ResponseEntity<Person> result = restTemplate.getForEntity(url, Person.class);
+        restTemplate.delete(url);
+
+        //TODO how to confirm deletion
+
 
     }
 
