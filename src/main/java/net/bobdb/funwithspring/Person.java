@@ -22,6 +22,10 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    public Person(String name) {
+        this.name = name;
+    }
+
 }
 
 
