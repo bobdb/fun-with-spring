@@ -3,6 +3,7 @@ package net.bobdb.funwithspring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -20,10 +21,8 @@ public class PersonApiController {
     @GetMapping("/api/person")
     public List<Person> findAll() {
         Iterable<Person> persons = personRepository.findAll();
-
         List<Person> l = new ArrayList<>();
         persons.forEach(l::add);
-
         return l;
     }
 
@@ -34,8 +33,8 @@ public class PersonApiController {
 
     }
 
-    @GetMapping(path = "/api/person/{name}/add")
-    public Person addByName(@PathVariable String name) {
+    @PutMapping(path = "/api/person/")
+    public Person create(@PathVariable String name) {
         return personService.save(name);
 
     }

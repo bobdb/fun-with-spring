@@ -14,9 +14,9 @@ public class DatabaseLoader {
     CommandLineRunner initDatabase(PersonRepository repository) {
 
         return args -> {
-            log.info("Preloading " + repository.save(new Person("Daemon",1L)));
-            log.info("Preloading " + repository.save(new Person("Viserys", 2L)));
-            log.info("Preloading " + repository.save(new Person("Corlys", 3L)));
+            log.info("Preloading " + repository.save(new Person("Daemon")));
+            log.info("Preloading " + repository.save(new Person("Viserys")));
+            log.info("Preloading " + repository.save(new Person("Corlys")));
             };
     }
 
