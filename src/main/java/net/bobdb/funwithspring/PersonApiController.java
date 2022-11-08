@@ -25,9 +25,9 @@ public class PersonApiController {
         Optional<Person> optionalPerson = personService.findById(id);
 
         if (optionalPerson.isPresent())
-                return ResponseEntity.ok().body(optionalPerson.get());
+            return ResponseEntity.ok().body(optionalPerson.get());
         else
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
 
