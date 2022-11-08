@@ -25,5 +25,10 @@
         </tr>
     </tbody>
 </table>
+<br>
+<form action="#" th:action="@{/person}" th:object="${find}" method="post">
+    <p>Create Person <input type="text" th:field="*{name}"/>
+    <input type="submit" value="Go" /></p>
+</form>
 </body>
 </html>
