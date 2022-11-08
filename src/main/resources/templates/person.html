@@ -30,5 +30,9 @@
     <p>Create Person <input type="text" th:field="*{name}"/>
     <input type="submit" value="Go" /></p>
 </form>
+<form action="#" th:action="@{/person/delete}" th:object="${find}" method="post">
+    <p>Delete Person <input type="text" th:field="*{name}"/>
+    <input type="submit" value="Go" /></p>
+</form>
 </body>
 </html>

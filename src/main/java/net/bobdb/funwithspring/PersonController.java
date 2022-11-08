@@ -3,12 +3,10 @@ package net.bobdb.funwithspring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PersonController {
@@ -34,6 +32,18 @@ public class PersonController {
     @PostMapping(path = "/person")
     public String create(@ModelAttribute Person find, Model model) {
         personService.save(find.getName());
+        List<Person> persons = personService.findAll().orElse(List.of());
+        model.addAttribute("persons", persons);
+        model.addAttribute("find", find);
+        return "person";
+    }
+
+    @PostMapping(path = "/person/delete")
+    public String delete(@ModelAttribute Person find, Model model) {
+        Optional<Person> p = personService.findByName(find.getName());
+        if (p.isPresent()) {
+            personService.delete(p.get().getId());
+        }
         List<Person> persons = personService.findAll().orElse(List.of());
         model.addAttribute("persons", persons);
         model.addAttribute("find", find);
