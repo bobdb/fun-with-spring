@@ -22,7 +22,7 @@ public class PersonService {
         return personRepository.findById(id);
     }
     public Optional<Person> findByName(String name) {
-        return Optional.of(personRepository.findByName(name));
+        return Optional.ofNullable(personRepository.findByName(name));
     }
 
     public Optional<List<Person>> findAll() {

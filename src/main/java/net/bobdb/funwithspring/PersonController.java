@@ -50,4 +50,17 @@ public class PersonController {
         return "person";
     }
 
+    @PostMapping(path = "/person/deleteById")
+    public String deleteById(@ModelAttribute Person find, Model model) {
+        Optional<Person> p = personService.findById(find.getId());
+        if (p.isPresent()) {
+            personService.delete(p.get().getId());
+        }
+
+        List<Person> persons = personService.findAll().orElse(List.of());
+        model.addAttribute("persons", persons);
+        model.addAttribute("find", find);
+        return "person";
+    }
+
 }
